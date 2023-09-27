@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from typing import Union
 from deta import Deta
@@ -54,13 +54,13 @@ def get_next_customer() -> Union[Customer, None]:
     return customer
 
 @app.get("/advance-queue") #Actually advances the queue by removing and returning the next customer
-def advance_queue() -> Union[Customer, None]:
+def advance_queue(): #-> Union[Customer, None]:
     currentQueue = queue.get("0")["list"]
     nextCustKey = currentQueue.pop(0)
     queue.put({"list" :currentQueue}, "0")
     customer: Customer = db.get(nextCustKey)
     db.delete(nextCustKey)
-    return customer
+    return RedirectResponse("https://waitlist-1-c5006775.deta.app/waitlist/3014707") #'https://waitlist-1-c5006775.deta.app/waitlist/3014707'
 
 @app.get("/add", response_class=HTMLResponse)
 def add_customer(request: Request, name: str, number: int) -> Customer:
@@ -73,7 +73,7 @@ def add_customer(request: Request, name: str, number: int) -> Customer:
         currentQueue.append(key)
     queue.put({"list" :currentQueue}, "0")
     db.put(customer.toDict(), key) #, expire_in=43200) #Expires in 12 hours
-    return templates.TemplateResponse("waitlist.html", {"request": request, "name": name, "number": number})
+    return templates.TemplateResponse("position.html", {"request": request, "name": name, "number": number})
 
 @app.get("/tablesize")
 def get_num_customers() -> int:
@@ -81,24 +81,39 @@ def get_num_customers() -> int:
     return table.count
 
 @app.get("/delete")
-def delete_customer_for_key(name: str, number: int) -> bool:
+def delete_customer_for_key(request: Request, name: str, number: int, admin: bool = False):
     try:
         customer: Customer = Customer(name=name, number=number)
         db.delete(myHash(customer))
         currentQueue = queue.get("0")["list"]
         currentQueue.remove(myHash(customer))
         queue.put({"list" : currentQueue}, "0")
-        return True
+        if admin:
+            return RedirectResponse("https://waitlist-1-c5006775.deta.app/waitlist/3014707") #'https://waitlist-1-c5006775.deta.app/waitlist/3014707'
+        else:
+            return templates.TemplateResponse("deleted.html", {"request": request, "name": name, "number": number})
     except ValueError:
         return False
 
 @app.get("/clear-all")
-def clearDB() -> bool:
+def clearDB():
     customers = get_customers()
     for customerDict in customers:
         db.delete(customerDict["key"]) #Removes everyone from the customer db
     queue.put({"list": []}, "0") #Clears the queue
 
     if get_num_customers() == 0:
-        return True
+        return RedirectResponse("https://waitlist-1-c5006775.deta.app/waitlist/3014707") #'https://waitlist-1-c5006775.deta.app/waitlist/3014707'
     return False
+
+@app.get("/position")
+def get_position(name: str, number: int) -> Union[int, None]:
+    queue = get_queue()
+    try:
+        return queue.index(myHash(Customer(name=name, number=number))) + 1
+    except ValueError:
+        return None
+
+@app.get("/waitlist/3014707", response_class=HTMLResponse)
+def waitlist(request: Request):
+    return templates.TemplateResponse("waitlist.html", {"request": request})

@@ -1,7 +1,3 @@
-<h1>Here lies the waitlist</h1>
-<h3>Your Name: {{ name }}</h3>
-<h3>Your Number: {{ number }}</h3>
-
 <style>
     table {
       font-family: arial, sans-serif;
@@ -21,25 +17,42 @@
 </style>
 
 <body>
+
+    <h1>Here lies the waitlist</h1>
+
+    <h3>Current Customer:</h3>
+    <currentCust></currentCust>
     <table></table>
 
-    <form action="/delete">
-        <input type="hidden" name="name" value= {{name}}> 
-        <input type="hidden" name="number" value= {{number}}> 
-        <input type="submit" value="Leave Waitlist">
+    <form action="/clear-all">
+        <input type="submit" value="Clear Waitlist">
+    </form> 
+
+    <form action="/advance-queue">
+        <input type="submit" value="Next Customer">
     </form> 
 
     <script>
         const table = document.querySelector('table');
-        let htmlString = "<tr><th>Position</th><th>Name</th></tr>";
+        const currentCust = document.querySelector('currentCust')
+        let tablehtmlString = "<tr><th>Position</th><th>Name</th><th>Number</th><th>Actions</th></tr>";
+        let custhtmlString = ""
 
-        fetch('https://waitlist-1-c5006775.deta.app/customers')
+        fetch('https://waitlist-1-c5006775.deta.app/customers') //'https://waitlist-1-c5006775.deta.app/customers'
         .then(response => response.json())
         .then((list) => {
-            for (let i = 0; i < list.length; i++){
-                htmlString += `<tr><td>${i+1}</td><td>${list[i].name}</td></tr>`;
+            custhtmlString += `<p>Name: ${list[0].name}</p><p>Number: <a href="sms:${list[0].number}">${list[0].number}</a></p>`
+            for (let i = 1; i < list.length; i++){
+                let linkText = list[i].number //`<a href="sms:${list[i].number}">${list[i].number}</a>`
+                let button = `<form action="/delete">
+                                <input type="hidden" name="name" value= ${list[i].name}> 
+                                <input type="hidden" name="number" value= ${list[i].number}>
+                                <input type="hidden" name="admin" value= ${true}>
+                                <input type="submit" value="Remove"></form>`
+                tablehtmlString += `<tr><td>${i}</td><td>${list[i].name}</td><td>${linkText}</td><td>${button}</td></tr>`;
             }
-            table.innerHTML = htmlString;
+            table.innerHTML = tablehtmlString;
+            currentCust.innerHTML = custhtmlString;
         })
     </script>
 </body>

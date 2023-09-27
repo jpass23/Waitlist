@@ -1,0 +1,34 @@
+<h1>Thanks for joining!</h1>
+<p>Your Name: {{ name }}</p>
+<p>Your Number: {{ number }}</p>
+<h3>You are at position:</h3>
+<position>
+    
+</position>
+
+
+<body>
+    <table></table>
+
+    <form action="/delete">
+        <input type="hidden" name="name" value= {{name}}> 
+        <input type="hidden" name="number" value= {{number}}> 
+        <input type="submit" value="Leave Waitlist">
+    </form> 
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const name = urlParams.get('name');
+        const number = urlParams.get('number');
+
+        const position = document.querySelector('position');
+        let htmlString = "";
+
+        fetch(`https://waitlist-1-c5006775.deta.app/position?name=${name}&number=${number}`) //'https://waitlist-1-c5006775.deta.app/position?name=${name}&number=${number}'
+        .then(response => response.json())
+        .then((num) => {
+            htmlString += `<h1>${num}</h1>`;
+            position.innerHTML = htmlString;
+        })
+    </script>
+</body>
