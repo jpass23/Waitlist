@@ -1,0 +1,45 @@
+<h1>Here lies the waitlist</h1>
+<h3>Your Name: {{ name }}</h3>
+<h3>Your Number: {{ number }}</h3>
+
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+</style>
+
+<body>
+    <table></table>
+
+    <form action="/delete">
+        <input type="hidden" name="name" value= {{name}}> 
+        <input type="hidden" name="number" value= {{number}}> 
+        <input type="submit" value="Leave Waitlist">
+    </form> 
+
+    <script>
+        const table = document.querySelector('table');
+        let htmlString = "<tr><th>Position</th><th>Name</th></tr>";
+
+        fetch('https://waitlist-1-c5006775.deta.app/customers')
+        .then(response => response.json())
+        .then((list) => {
+            for (let i = 0; i < list.length; i++){
+                htmlString += `<tr><td>${i+1}</td><td>${list[i].name}</td></tr>`;
+            }
+            table.innerHTML = htmlString;
+        })
+    </script>
+</body>
