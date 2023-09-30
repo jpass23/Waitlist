@@ -20,12 +20,12 @@
 
     <h1>Here lies the waitlist</h1>
 
-    <h3>Current Customer:</h3>
-    <currentCust></currentCust>
+    <!-- <h3>Current Customer:</h3>
+    <currentCust></currentCust> -->
     <table></table>
 
     <form action="/clear-all">
-        <input type="submit" value="Clear Waitlist">
+        <input type="submit" value="Clear Waitlist" onclick="return confirm('Are you sure you want to clear the waitlist?')">
     </form> 
 
     <form action="/advance-queue">
@@ -41,18 +41,22 @@
         fetch('https://waitlist-1-c5006775.deta.app/customers') //'https://waitlist-1-c5006775.deta.app/customers'
         .then(response => response.json())
         .then((list) => {
-            custhtmlString += `<p>Name: ${list[0].name}</p><p>Number: <a href="sms:${list[0].number}">${list[0].number}</a></p>`
-            for (let i = 1; i < list.length; i++){
-                let linkText = list[i].number //`<a href="sms:${list[i].number}">${list[i].number}</a>`
+            //custhtmlString += `<p>Name: ${list[0].name}</p><p>Number: <a href="sms:${list[0].number}">${list[0].number}</a></p>`
+            for (let i = 0; i < list.length; i++){
+                let linkText = `<a href="sms:${list[i].number}&body=It's time to get painted! I will hold your spot for 10 minutes :)">${list[i].number}</a>`
+                if (i!=0){
+                    linkText = list[i].number
+                }
+                
                 let button = `<form action="/delete">
                                 <input type="hidden" name="name" value= ${list[i].name}> 
                                 <input type="hidden" name="number" value= ${list[i].number}>
                                 <input type="hidden" name="admin" value= ${true}>
-                                <input type="submit" value="Remove"></form>`
-                tablehtmlString += `<tr><td>${i}</td><td>${list[i].name}</td><td>${linkText}</td><td>${button}</td></tr>`;
+                                <input type="submit" value="Remove" onclick="return confirm('Are you sure you want to remove ${list[i].name} from the waitlist?')"></form>`
+                tablehtmlString += `<tr><td>${i+1}</td><td>${list[i].name}</td><td>${linkText}</td><td>${button}</td></tr>`;
             }
             table.innerHTML = tablehtmlString;
-            currentCust.innerHTML = custhtmlString;
+            //currentCust.innerHTML = custhtmlString;
         })
     </script>
 </body>
