@@ -1,0 +1,65 @@
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+</head>
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+</style>
+
+<body>
+
+    <h1>Here lies the waitlist</h1>
+
+    <!-- <h3>Current Customer:</h3>
+    <currentCust></currentCust> -->
+    <table></table>
+
+    <form action="/clear-all">
+        <input type="submit" value="Clear Waitlist" onclick="return confirm('Are you sure you want to clear the waitlist?')">
+    </form> 
+
+    <form action="/advance-queue">
+        <input type="submit" value="Next Customer">
+    </form> 
+
+    <script>
+        const table = document.querySelector('table');
+        const currentCust = document.querySelector('currentCust')
+        let tablehtmlString = "<tr><th>Position</th><th>Name</th><th>Number</th><th>Actions</th></tr>";
+        let custhtmlString = ""
+
+        fetch('https://waitlist-1-c5006775.deta.app/customers') //'https://waitlist-1-c5006775.deta.app/customers'
+        .then(response => response.json())
+        .then((list) => {
+            //custhtmlString += `<p>Name: ${list[0].name}</p><p>Number: <a href="sms:${list[0].number}">${list[0].number}</a></p>`
+            for (let i = 0; i < list.length; i++){
+                let linkText = `<a href="sms:${list[i].number}&body=It's time to get your portrait done! Please reply to confirm your spot. Spots will be held for 10 mins max with no reply. Thanks :) ">${list[i].number}</a>`
+                if (i!=0){
+                    linkText = list[i].number
+                }
+                
+                let button = `<form action="/delete">
+                                <input type="hidden" name="name" value= ${list[i].name}> 
+                                <input type="hidden" name="number" value= ${list[i].number}>
+                                <input type="hidden" name="admin" value= ${true}>
+                                <input type="submit" value="Remove" onclick="return confirm('Are you sure you want to remove ${list[i].name} from the waitlist?')"></form>`
+                tablehtmlString += `<tr><td>${i+1}</td><td>${list[i].name}</td><td>${linkText}</td><td>${button}</td></tr>`;
+            }
+            table.innerHTML = tablehtmlString;
+            //currentCust.innerHTML = custhtmlString;
+        })
+    </script>
+</body>

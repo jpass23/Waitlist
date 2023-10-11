@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+</head>
+
+<style>
+  body {
+      background-color: #e9b9fd;
+  }
+  .container {
+    margin: auto;
+    width: fit-content;
+    text-align: left;
+    padding-top: 170px;
+  }
+  .container input[type="submit"] {
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+    height: 30px;
+    border: none;
+    outline: none;
+    background: #2f2f2f;
+    color: #e9b9fd;
+    font-size: 15px;
+    border-radius: 40px;
+    text-align: center; 
+  } 
+  p {
+    margin: auto;
+    width: fit-content;
+    text-align: center;
+  }
+</style>  
+
+<html>
+<body>
+  <div class="container">
+    <h2>Join the waitlist!</h2>
+
+    <form action="/add">
+      <label for="name">First Name:</label><br>
+      <input type="text" id="name" name="name" required><br>
+      <label for="number">Phone Number:</label><br>
+      <input type="tel" id="number" name="number" placeholder="1231231234" pattern="[0-9]{10}" required><br><br>
+      <input type="submit" value="Submit">
+    </form> 
+  </div>
+  <p>Click submit to get your name on the list!</p>
+</body>
+</html>
