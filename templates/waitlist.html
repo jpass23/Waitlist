@@ -1,3 +1,6 @@
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+</head>
 <style>
     table {
       font-family: arial, sans-serif;
@@ -43,7 +46,7 @@
         .then((list) => {
             //custhtmlString += `<p>Name: ${list[0].name}</p><p>Number: <a href="sms:${list[0].number}">${list[0].number}</a></p>`
             for (let i = 0; i < list.length; i++){
-                let linkText = `<a href="sms:${list[i].number}&body=It's time to get painted! I will hold your spot for 10 minutes :)">${list[i].number}</a>`
+                let linkText = `<a href="sms:${list[i].number}&body=It's time to get your portrait done! Please reply to confirm your spot. Spots will be held for 10 mins max with no reply. Thanks :) ">${list[i].number}</a>`
                 if (i!=0){
                     linkText = list[i].number
                 }
