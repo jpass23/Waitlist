@@ -16,7 +16,7 @@ Join the waitlist [here](https://waitlist-1-c5006775.deta.app/join-waitlist) and
 
 If the [waitlist page](https://waitlist-1-c5006775.deta.app/waitlist/3014707) is accessed via a mobile device, clicking the phone number of the next person in line will automatically redirect to the messaging app and populate a text with the desired information to contact the client. 
 
-Pages 1 and 2 are customer facing which is why there is CSS. I didnt take time to add CSS to the waitlist page since it would not be customer facing.
+Pages 1 and 2 are customer facing which is why there is CSS. The waitlist page not being customer facing allows for no CSS and a goofy title.
 
 ## Screenshots:
 <div align=left>
