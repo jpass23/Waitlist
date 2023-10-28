@@ -19,7 +19,7 @@ If the [waitlist page](https://waitlist-1-c5006775.deta.app/waitlist/3014707) is
 Pages 1 and 2 are customer facing which is why there is CSS. The waitlist page not being customer facing allows for no CSS and a goofy title.
 
 ## Screenshots:
-<div align=center>
+<div align=left>
 
 <img src="https://raw.githubusercontent.com/jpass23/Waitlist/main/Screenshots/Join%20Page.png" width="525"/>
 
